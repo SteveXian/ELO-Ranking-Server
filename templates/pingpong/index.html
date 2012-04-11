@@ -1,0 +1,23 @@
+{% extends 'pingpong/base.html' %}
+{% block head %}
+        <script type="text/javascript">
+        $(function() {
+            $('#tabs').tabs();
+        });
+        </script>
+{% endblock %}
+
+{% block body %}
+<div id="tabs">
+    <ul>
+        <li><a href="#fragment-1"><span>Rankings</span></a></li>
+        <li><a href="#fragment-2"><span>Report Games</span></a></li>
+    </ul>
+    <div id="fragment-1">
+        {% include 'pingpong/ranking.html' with player_list=player_list only %}
+    </div>
+    <div id="fragment-2">
+        {% include 'pingpong/report.html' with player_list=player_list only %}
+    </div>
+</div>
+{% endblock %}
