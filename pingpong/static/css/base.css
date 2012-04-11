@@ -1,0 +1,15 @@
+table
+{
+    text-align:center;
+    background-color:white;
+    padding:10px;
+    border:1px solid;
+    width:50%;
+}
+
+td
+{
+    padding:5px;
+    font-weight:normal;
+    border:1px solid;
+}
