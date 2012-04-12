@@ -2,29 +2,38 @@ from models import Player
 import math
 
 K = 32
+MAX_BONUS_PER_GAME = 10
 
 def update(POST):
     player_one = Player.objects.get(pk=int(POST['player_one']))
     player_one_score = int(POST['player_one_score'])
     player_two = Player.objects.get(pk=int(POST['player_two']))
     player_two_score = int(POST['player_two_score'])
-    total_games = player_two_score + player_one_score
+    if player_one.ELO > player_two.ELO:
+        expected_one = get_Expected(player_one.ELO, player_two.ELO)
+    else:
+        expected_one = 1 - get_Expected(player_two.ELO, player_one.ELO)
+    update_player(player_one, player_one_score, player_two, player_two_score, expected_one)
+    update_player(player_two, player_two_score, player_one, player_one_score, 1-expected_one)
 
-    expected_one = get_Expected_A(player_one.ELO, player_two.ELO)
-    expected_two = get_Expected_A(player_two.ELO, player_one.ELO)
-
-    player_one.wins += player_one_score
-    player_one.losses += player_two_score
-    player_one.ELO = update_elo(player_one.ELO, player_one_score, expected_one*total_games)
-    player_one.save()
-
-    player_two.wins += player_two_score
-    player_two.losses += player_one_score
-    player_two.ELO = update_elo(player_two.ELO, player_two_score, expected_two*total_games)
-    player_two.save()
-
-def get_Expected_A(Real_A, Real_B):
-    return float(1)/( 1 + math.pow(10, ((Real_B - Real_A)/400)))
+def get_Expected(Real_A, Real_B):
+    return 1 - (1/(math.pow(2, ((Real_A - Real_B)/float(75)) + 1)))
 
 def update_elo(ELO, Score, Expected):
     return math.ceil(ELO + K*(Score - Expected))
+
+def update_player(player_one, player_one_score, player_two, player_two_score, expected):
+    total_games = player_two_score + player_one_score
+
+    player_one.wins += player_one_score
+    player_one.losses += player_two_score
+    player_one.ELO = update_elo(player_one.ELO, player_one_score, expected*total_games)
+    
+    if player_one.bonus_pool < MAX_BONUS_PER_GAME * total_games:
+        player_one.ELO += player_one.bonus_pool
+        player_one.bonus_pool = 0
+    else:
+        player_one.ELO += MAX_BONUS_PER_GAME * total_games
+        player_one.bonus_pool -= MAX_BONUS_PER_GAME * total_games
+
+    player_one.save()

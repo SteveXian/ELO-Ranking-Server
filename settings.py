@@ -1,4 +1,4 @@
-# Django settings for PingPongELO project.
+1# Django settings for PingPongELO project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -122,6 +122,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'pingpong',
+    'south',
 )
 
 # A sample logging configuration. The only tangible logging

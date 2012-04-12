@@ -1,16 +1,18 @@
 <table>
     <tr>
         <th>Player Name</th>
-        <th>Wins</th>
-        <th>Losses</th>
+        <!--th>Wins</th>
+        <th>Losses</th-->
         <th>ELO</th>
+        <th>Bonus Pool</th>
     </tr>
     {% for player in player_list %}
     <tr>
         <td>{{player.player_name}}</td>
-        <td>{{player.wins}}</td>
-        <td>{{player.losses}}</td>
+        <!--td>{{player.wins}}</td>
+        <td>{{player.losses}}</td-->
         <td>{{player.ELO}}</td>
+        <td>{{player.bonus_pool}}</td>
     <tr>
     {% endfor %}
 </table>
