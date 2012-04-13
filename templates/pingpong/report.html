@@ -1,22 +1,28 @@
-<form action="/" method="post">
+<script type="text/javascript">
+    function validateForm() {
+        return confirm("Are you sure you want to submit?");
+    }
+</script>
+
+<form action="/" method="post" onsubmit="return validateForm()">
 {% csrf_token %}
-<select name="player_one">
+<select name="player_one" id="player_one">
 <option selected="selected" value=-1>Player One</option>
 {% for player in player_list %}
 <option value={{player.id}}>{{player.player_name}}</option>
 {% endfor %}
 </select>
 
-<input name="player_one_score" type="text" value="0"></input>
+<input name="player_one_score" type="text" value="0" id="player_one_score"></input>
 <br>
-<select name="player_two">
+<select name="player_two" id="player_two">
 <option selected="selected" value="-1">Player Two</option>
 {% for player in player_list %}
 <option value={{player.id}}>{{player.player_name}}</option>
 {% endfor %}
 </select>
 
-<input name="player_two_score" type="text" value="0"></input>
+<input name="player_two_score" type="text" value="0" id="player_two_score"></input>
 <br/>
 <input type="submit" value="Submit" />
 
