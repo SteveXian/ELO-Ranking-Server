@@ -3,21 +3,25 @@ import math
 
 K = 32
 MAX_BONUS_PER_GAME = 10
+#the higher the number, the lower the sensitivity
+ELO_SENSITIVITY = 100
 
 def update(POST):
     player_one = Player.objects.get(pk=int(POST['player_one']))
     player_one_score = int(POST['player_one_score'])
     player_two = Player.objects.get(pk=int(POST['player_two']))
     player_two_score = int(POST['player_two_score'])
+
     if player_one.ELO > player_two.ELO:
         expected_one = get_Expected(player_one.ELO, player_two.ELO)
     else:
         expected_one = 1 - get_Expected(player_two.ELO, player_one.ELO)
+        
     update_player(player_one, player_one_score, player_two, player_two_score, expected_one)
     update_player(player_two, player_two_score, player_one, player_one_score, 1-expected_one)
 
 def get_Expected(Real_A, Real_B):
-    return 1 - (1/(math.pow(2, ((Real_A - Real_B)/float(75)) + 1)))
+    return 1 - (1/(math.pow(2, ((Real_A - Real_B)/float(ELO_SENSITIVITY)) + 1)))
 
 def update_elo(ELO, Score, Expected):
     return math.ceil(ELO + K*(Score - Expected))
